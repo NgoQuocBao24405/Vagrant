@@ -1,18 +1,18 @@
 {
-  "name": "bento/ubuntu-24.04",
-  "versions": [
-    {
-      "version": "202510.26.0",
-      "providers": [
-        {
-          "name": "virtualbox",
-          "architecture": "amd64",
-          "default_architecture": true,
-          "url": "file:///D:/vagrant-boxes/bento-ubuntu-24.04-202510.26.0-virtualbox-amd64.box",
-          "checksum_type": "sha256",
-          "checksum": "CHAY scripts/box-archive.ps1 DE DIEN SHA256 THAT"
-        }
-      ]
-    }
-  ]
+    "name":  "bento/ubuntu-24.04",
+    "versions":  [
+                     {
+                         "version":  "202510.26.0",
+                         "providers":  [
+                                           {
+                                               "name":  "virtualbox",
+                                               "architecture":  "amd64",
+                                               "checksum_type":  "sha256",
+                                               "checksum":  "f77c344626eb150d6426435b30eee267d406272a3646c1ba25b4cd58bd630494",
+                                               "url":  "file:///D:/vagrant-boxes/bento-ubuntu-24.04-202510.26.0-virtualbox-amd64.box",
+                                               "default_architecture":  true
+                                           }
+                                       ]
+                     }
+                 ]
 }

@@ -1,0 +1,17 @@
+﻿
+INFO  Windows                                          Microsoft Windows 11 Pro build 26200
+PASS  RAM >= 8 GB                                      15.8 GB
+PASS  O D: trong >= 40 GB                              171.1 GB
+WARN  HypervisorPresent = False                        HypervisorPresent=True (True -> VirtualBox chay che do NEM, cham)
+WARN  VBS (Core isolation) tat                         VBS: Dang chay; dich vu dang chay: MemoryIntegrity
+INFO  bcdedit                                          can quyen Admin de doc (hoac chua dat)
+PASS  VirtualBox 7.2.x                                 7.2.22r175245
+PASS  Vagrant 2.4.9                                    2.4.9
+PASS  Box bento/ubuntu-24.04 202510.26.0 trong cache   co
+PASS  Khong dung plugin vagrant-vbguest                No plugins installed.
+PASS  Git                                              git version 2.56.0.windows.3
+PASS  git core.autocrlf = input                        hien tai: 'input'
+WARN  Ban luu tru box cuc bo                           chua co - chay scripts\box-archive.ps1
+
+Khong co FAIL. WARN = nen sua nhung van chay duoc.
+
