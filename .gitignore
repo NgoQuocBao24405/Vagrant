@@ -1,0 +1,13 @@
+# Trạng thái Vagrant cục bộ
+.vagrant/
+# Thư mục runtime của containerlab (nếu lỡ tạo trong repo)
+clab-*/
+clab-runtime/
+.clab-runtime/
+# Box và gói offline: quá lớn cho GitHub
+*.box
+offline/
+*.tar
+# VS Code: chỉ commit settings.json
+.vscode/*
+!.vscode/settings.json
