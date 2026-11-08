@@ -91,7 +91,27 @@ git ls-files --eol | Select-String "scripts/"    # cột "i/lf" cho mọi file .
 
 **GUI.** Mở `D:\Vagrant` bằng VS Code. Ở thanh trạng thái góc phải dưới có chữ **LF** hoặc **CRLF**: mở `scripts/provision.sh` phải thấy **LF**. File `.vscode/settings.json` đã đặt VS Code luôn lưu bằng LF.
 
-**Quy ước commit.** `feat(...)`, `fix(...)`, `docs:`, `test:`, `chore:`. Chỉ dùng Git ở phía Windows (VS Code hoặc GitHub Desktop). Thư mục `/vagrant` trong VM là cùng một thư mục nên không cần commit từ VM.
+**Ba nhánh của repo.**
+
+| Nhánh | Vai trò | Ai ghi vào |
+|---|---|---|
+| `bao` | nhánh làm việc hằng ngày: sửa, commit, push | bạn push trực tiếp |
+| `dev` | nhánh gộp và chạy thử: lab phải `deploy` + `smoke.sh` PASS ở đây | chỉ nhận merge từ `bao` qua Pull Request |
+| `main` | bản ổn định để nộp/trình GVHD, gắn tag phiên bản | chỉ nhận merge từ `dev` qua Pull Request |
+
+Vòng làm việc:
+```bash
+git checkout bao                 # luôn làm trên bao
+git pull                         # lấy bản mới nhất
+# ... sửa file, chạy thử trong VM ...
+git add -A && git commit -m "feat(lab): mo ta ngan"
+git push
+```
+Trên GitHub: *Pull requests → New → base: `dev` ← compare: `bao`* → Merge. Trong VM chuyển sang `dev` (`git checkout dev && git pull` trên Windows), chạy `./scripts/deploy.sh && ./tests/smoke.sh`. Tất cả PASS thì mở PR *base: `main` ← compare: `dev`* → Merge, rồi gắn tag (vd `v0.1-vm`) trên `main`. Sau mỗi lần merge, đồng bộ lại `bao`: `git checkout bao && git merge origin/main && git push`.
+
+Bảo vệ nhánh (khuyến nghị): *Settings → Branches → Add branch ruleset* cho `main` và `dev`, bật *Require a pull request before merging*, để không lỡ tay push thẳng vào hai nhánh này.
+
+**Quy ước commit.** `feat(...)`, `fix(...)`, `docs:`, `test:`, `chore:`. Chỉ dùng Git ở phía Windows (VS Code, GitHub Desktop hoặc Git Bash). Thư mục `/vagrant` trong VM là cùng một thư mục nên không cần commit từ VM.
 
 ---
 
@@ -169,7 +189,7 @@ vagrant halt
 vagrant snapshot save base-docker      # điểm khôi phục; quay lại bằng: vagrant snapshot restore base-docker
 vagrant up
 ```
-Trên GitHub web: *Releases → Draft a new release → tag `v0.1-vm`*.
+Merge `bao` → `dev` → `main` như Bước 4, rồi trên GitHub web: *Releases → Draft a new release → tag `v0.1-vm`*, chọn target `main`.
 
 ---
 

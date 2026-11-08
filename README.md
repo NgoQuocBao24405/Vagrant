@@ -28,7 +28,7 @@ Kiểm tra nhanh: `powershell -ExecutionPolicy Bypass -File .\scripts\host-check
 
 ```powershell
 # Windows PowerShell
-git clone https://github.com/NgoQuocBao24405/Vagrant.git D:\Vagrant
+git clone -b main https://github.com/NgoQuocBao24405/Vagrant.git D:\Vagrant
 cd D:\Vagrant
 vagrant up          # lần đầu 10–20 phút: cài Docker, containerlab, build image
 vagrant ssh
@@ -65,5 +65,7 @@ clab/abc.clab.yml        topology lab
 tests/smoke.sh           13 phép kiểm tra PASS/FAIL
 docs/                    hướng dẫn từng bước, IP plan, nhật ký tuần, bằng chứng
 ```
+
+Nhánh: `bao` (làm việc) → `dev` (gộp, chạy thử) → `main` (ổn định). Chi tiết ở Bước 4 của hướng dẫn.
 
 Hướng dẫn chi tiết tuần 1–5: [docs/HuongDan_Tuan1-5.md](docs/HuongDan_Tuan1-5.md) · Bảng IP: [docs/ip-plan.md](docs/ip-plan.md)
