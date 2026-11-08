@@ -19,7 +19,8 @@ log()  { echo -e "\n==> $*"; }
 warn() { echo "!!! CANH BAO: $*" >&2; }
 
 # Tìm chuỗi phiên bản apt đầy đủ (vd 5:29.9.2-1~ubuntu.24.04~noble) cho một gói
-apt_ver() { apt-cache madison "$1" | awk -v w="$2" '{ if (index($3, w"-")>0) { print $3; exit } }'; }
+# awk đọc hết input (không "exit" sớm): thoát sớm làm apt-cache nhận SIGPIPE (141), pipefail + set -e dừng script
+apt_ver() { apt-cache madison "$1" | awk -v w="$2" '!f && index($3, w"-")>0 { print $3; f=1 }'; }
 
 # ---------- 1. Docker Engine ----------
 if ! command -v docker >/dev/null 2>&1; then
