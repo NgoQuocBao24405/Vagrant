@@ -1,0 +1,16 @@
+PASS  OSPF r-hq co 2 neighbor Full
+PASS  OSPF r-br co 2 neighbor Full
+PASS  OSPF r-edge co 2 neighbor Full
+PASS  BGP r-edge <-> r-isp Established
+PASS  r-br co default route (O E2)
+PASS  pc-br1 -> pc-hq1
+PASS  pc-br1 -> srv-web
+PASS  pc-br1 -> srv-dns
+PASS  pc-br1 -> inet-host (qua ISP)
+PASS  pc-hq1 -> inet-host (qua ISP)
+PASS  DNS web.abc.lab = 192.168.20.10
+PASS  DNS ten la -> NXDOMAIN
+PASS  HTTP http://web.abc.lab = 200
+----
+TAT CA PASS
+smoke_exit=0

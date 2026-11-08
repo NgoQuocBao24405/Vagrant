@@ -1,0 +1,21 @@
+﻿> vagrant halt
+==> default: Attempting graceful shutdown of VM...
+> vagrant snapshot save base-docker
+==> default: Snapshotting the machine as 'base-docker'...
+==> default: Snapshot saved! You can restore the snapshot at any time by
+==> default: using `vagrant snapshot restore`. You can delete it using
+==> default: `vagrant snapshot delete`.
+> vagrant snapshot list
+==> default: 
+base-docker
+> vagrant up
+vagrant_up_lan_sau_s=55.949785
+> vagrant status
+Current machine states:
+
+default                   running (virtualbox)
+
+The VM is running. To stop this VM, you can run `vagrant halt` to
+shut it down forcefully, or you can run `vagrant suspend` to simply
+suspend the virtual machine. In either case, to restart it again,
+simply run `vagrant up`.

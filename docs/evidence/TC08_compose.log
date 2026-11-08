@@ -1,0 +1,42 @@
+# TC08 - Docker Compose (2026-11-08T16:15:44+00:00); VM clab-host, che do NEM
+$ docker compose -f docker/compose.yaml up -d
+ Network abc-svc_svc-test Creating 
+ Network abc-svc_svc-test Creating 
+ Network abc-svc_svc-test Created 
+ Network abc-svc_svc-test Created 
+ Container abc-svc-dns-1 Creating 
+ Container abc-svc-dns-1 Created 
+ Container abc-svc-web-1 Creating 
+ Container abc-svc-web-1 Created 
+ Container abc-svc-dns-1 Starting 
+ Container abc-svc-dns-1 Started 
+ Container abc-svc-dns-1 Waiting 
+ Container abc-svc-dns-1 Healthy 
+ Container abc-svc-web-1 Starting 
+ Container abc-svc-web-1 Started 
+(cho healthy: ~12 s)
+$ docker compose -f docker/compose.yaml ps
+NAME            IMAGE         COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+abc-svc-dns-1   abc/dns:1.0   "named -g -4 -u name…"   dns       24 seconds ago   Up 23 seconds (healthy)   127.0.0.1:5353->53/tcp, 127.0.0.1:5353->53/udp
+abc-svc-web-1   abc/web:1.0   "/docker-entrypoint.…"   web       24 seconds ago   Up 12 seconds (healthy)   127.0.0.1:8080->80/tcp
+
+$ curl -I http://127.0.0.1:8080
+HTTP/1.1 200 OK
+Server: nginx/1.30.6
+Date: Sun, 08 Nov 2026 16:16:09 GMT
+Content-Type: text/html
+Content-Length: 361
+Last-Modified: Sun, 08 Nov 2026 16:01:09 GMT
+Connection: keep-alive
+ETag: "6af09cc5-169"
+Accept-Ranges: bytes
+
+$ dig @127.0.0.1 -p 5353 web.abc.lab +short
+192.168.20.10
+
+$ docker run --rm abc/dns:1.0 named -v
+BIND 9.20.30 (Stable Release) <id:769c3fb>
+
+# Tu Windows (mong doi THAT BAI vi cong chi mo tren 127.0.0.1 cua VM)
+> Invoke-WebRequest http://192.168.56.10:8080 -TimeoutSec 5
+THAT BAI (dung mong doi): Unable to connect to the remote server
