@@ -1,0 +1,19 @@
+# Chạy thử hai dịch vụ bằng Docker Compose TRƯỚC khi đưa vào lab containerlab.
+#   cd /vagrant && docker compose -f docker/compose.yaml up -d --build
+# Cổng chỉ mở trên 127.0.0.1 của VM: Windows không truy cập trực tiếp được (cố ý).
+name: abc-svc
+services:
+  web:
+    build: ./web
+    image: abc/web:1.0
+    ports: ["127.0.0.1:8080:80"]
+    networks: [svc-test]
+    depends_on:
+      dns: { condition: service_healthy }
+  dns:
+    build: { context: .., dockerfile: docker/dns/Dockerfile }
+    image: abc/dns:1.0
+    ports: ["127.0.0.1:5353:53/udp", "127.0.0.1:5353:53/tcp"]
+    networks: [svc-test]
+networks:
+  svc-test: { driver: bridge }
