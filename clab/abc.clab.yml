@@ -1,0 +1,102 @@
+# Lab "abc" – mô phỏng mạng công ty ABC (HQ, Branch, ISP). containerlab 0.82.0
+# Chạy trong VM:  cd /vagrant && ./scripts/deploy.sh
+# Sơ đồ IP: docs/ip-plan.md
+name: abc
+
+mgmt:
+  network: clab
+  ipv4-subnet: 172.20.20.0/24
+
+topology:
+  groups:
+    routers:
+      kind: frr
+      image: quay.io/frrouting/frr:containerlab-10.7.1
+      # configs/ là nguồn sự thật: mỗi lần deploy đều nạp lại file trong configs/.
+      # Sửa trên router bằng vtysh thì PHẢI chạy ./scripts/save.sh để chép về configs/.
+      enforce-startup-config: true
+    hosts:
+      kind: linux
+      image: nicolaka/netshoot:v0.16
+
+  nodes:
+    r-hq:
+      group: routers
+      mgmt-ipv4: 172.20.20.11
+      startup-config: ../configs/r-hq/frr.conf
+      daemons: [ospfd]
+    r-br:
+      group: routers
+      mgmt-ipv4: 172.20.20.12
+      startup-config: ../configs/r-br/frr.conf
+      daemons: [ospfd]
+    r-edge:
+      group: routers
+      mgmt-ipv4: 172.20.20.13
+      startup-config: ../configs/r-edge/frr.conf
+      daemons: [ospfd, bgpd]
+    r-isp:
+      group: routers
+      mgmt-ipv4: 172.20.20.14
+      startup-config: ../configs/r-isp/frr.conf
+      daemons: [bgpd]
+
+    br-srv:
+      kind: bridge            # Linux bridge trên VM, deploy.sh tạo trước
+
+    pc-hq1:
+      group: hosts
+      mgmt-ipv4: 172.20.20.21
+      exec:
+        - ip link set eth1 up
+        - ip addr add 192.168.10.100/24 dev eth1
+        - ip route replace default via 192.168.10.1 dev eth1
+        - sh -c "echo 'nameserver 192.168.20.53' > /etc/resolv.conf"
+        - iperf3 -s -D
+    pc-br1:
+      group: hosts
+      mgmt-ipv4: 172.20.20.22
+      exec:
+        - ip link set eth1 up
+        - ip addr add 192.168.30.100/24 dev eth1
+        - ip route replace default via 192.168.30.1 dev eth1
+        - sh -c "echo 'nameserver 192.168.20.53' > /etc/resolv.conf"
+    inet-host:
+      group: hosts
+      mgmt-ipv4: 172.20.20.41
+      exec:
+        - ip link set eth1 up
+        - ip addr add 198.51.100.10/24 dev eth1
+        - ip route replace default via 198.51.100.1 dev eth1
+        - iperf3 -s -D
+    srv-web:
+      kind: linux
+      image: abc/web:1.0
+      mgmt-ipv4: 172.20.20.31
+      exec:
+        - ip link set eth1 up
+        - ip addr add 192.168.20.10/24 dev eth1
+        - ip route replace default via 192.168.20.1 dev eth1
+    srv-dns:
+      kind: linux
+      image: abc/dns:1.0
+      mgmt-ipv4: 172.20.20.32
+      binds:
+        - ../configs/srv-dns/named.conf:/etc/bind/named.conf:ro
+        - ../configs/srv-dns/db.abc.lab:/etc/bind/db.abc.lab:ro
+      exec:
+        - ip link set eth1 up
+        - ip addr add 192.168.20.53/24 dev eth1
+        - ip route replace default via 192.168.20.1 dev eth1
+
+  links:
+    - endpoints: ["r-hq:eth1", "r-edge:eth1"]        # L01 10.0.0.0/30   area 0
+    - endpoints: ["r-hq:eth2", "r-br:eth1"]          # L02 10.0.0.4/30   area 1
+    - endpoints: ["r-br:eth2", "r-edge:eth2"]        # L03 10.0.0.8/30   area 1
+    - endpoints: ["r-edge:eth3", "r-isp:eth1"]       # L04 203.0.113.0/30 eBGP
+    - endpoints: ["r-hq:eth3", "pc-hq1:eth1"]        # L05 192.168.10.0/24
+    - endpoints: ["r-hq:eth4", "br-srv:p1-rhq"]      # L06 192.168.20.0/24
+    - endpoints: ["srv-web:eth1", "br-srv:p2-web"]   # L07
+    - endpoints: ["srv-dns:eth1", "br-srv:p3-dns"]   # L08
+    - endpoints: ["r-br:eth3", "pc-br1:eth1"]        # L09 192.168.30.0/24
+    - endpoints: ["r-isp:eth2", "inet-host:eth1"]    # L10 198.51.100.0/24

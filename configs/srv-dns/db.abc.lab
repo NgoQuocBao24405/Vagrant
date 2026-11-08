@@ -1,0 +1,13 @@
+; Zone abc.lab – nhớ TĂNG serial mỗi lần sửa (YYYYMMDDnn)
+$TTL 300
+@       IN SOA ns1.abc.lab. admin.abc.lab. ( 2026110801 3600 600 86400 300 )
+        IN NS  ns1.abc.lab.
+ns1     IN A   192.168.20.53
+web     IN A   192.168.20.10
+www     IN CNAME web
+pc-hq1  IN A   192.168.10.100
+pc-br1  IN A   192.168.30.100
+r-hq    IN A   10.255.0.1
+r-br    IN A   10.255.0.2
+r-edge  IN A   10.255.0.3
+inet    IN A   198.51.100.10
