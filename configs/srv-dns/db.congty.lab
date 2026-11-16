@@ -1,7 +1,7 @@
-; Zone abc.lab – nhớ TĂNG serial mỗi lần sửa (YYYYMMDDnn)
+; Zone congty.lab – nhớ TĂNG serial mỗi lần sửa (YYYYMMDDnn)
 $TTL 300
-@       IN SOA ns1.abc.lab. admin.abc.lab. ( 2026110801 3600 600 86400 300 )
-        IN NS  ns1.abc.lab.
+@       IN SOA ns1.congty.lab. admin.congty.lab. ( 2026110801 3600 600 86400 300 )
+        IN NS  ns1.congty.lab.
 ns1     IN A   192.168.20.53
 web     IN A   192.168.20.10
 www     IN CNAME web

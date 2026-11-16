@@ -10,7 +10,7 @@
 ```
 Windows (Vagrant, VirtualBox, Git)
  └─ VM clab-host 192.168.56.10 (Ubuntu 24.04, Docker, containerlab)
-     └─ lab "abc": r-hq, r-br, r-edge, r-isp (FRR) · pc-hq1, pc-br1, inet-host · srv-web, srv-dns · br-srv
+     └─ lab "congty": r-hq, r-br, r-edge, r-isp (FRR) · pc-hq1, pc-br1, inet-host · srv-web, srv-dns · br-srv
 ```
 
 ## Yêu cầu máy
@@ -35,7 +35,7 @@ vagrant ssh
 ```
 ```bash
 # Trong VM (tự vào /vagrant)
-./scripts/deploy.sh && ./tests/smoke.sh
+./scripts/deploy.sh && ./tests/kiem-tra-nhanh.sh
 ```
 
 Máy yếu: `$env:LAB_CPUS=2; $env:LAB_MEM=4096; vagrant up`
@@ -45,9 +45,9 @@ Máy yếu: `$env:LAB_CPUS=2; $env:LAB_MEM=4096; vagrant up`
 | Việc | Lệnh (trong VM, thư mục /vagrant) |
 |---|---|
 | Dựng lab | `./scripts/deploy.sh` |
-| Kiểm tra lab | `./tests/smoke.sh` |
-| Vào router (CLI FRR) | `docker exec -it clab-abc-r-hq vtysh` |
-| Vào máy client | `docker exec -it clab-abc-pc-br1 bash` |
+| Kiểm tra lab | `./tests/kiem-tra-nhanh.sh` |
+| Vào router (CLI FRR) | `docker exec -it clab-congty-r-hq vtysh` |
+| Vào máy client | `docker exec -it clab-congty-pc-br1 bash` |
 | Lưu cấu hình đã sửa trên router | `./scripts/save.sh` rồi commit trên Windows |
 | Sửa file trong `configs/` rồi áp dụng | `./scripts/destroy.sh && ./scripts/deploy.sh` |
 | Gỡ lab | `./scripts/destroy.sh` |
@@ -61,8 +61,8 @@ scripts/                 host-check.ps1, box-archive.ps1 (Windows) · provision.
 boxes/metadata.json      catalog box cục bộ (file .box để ngoài Git)
 docker/                  Dockerfile web/dns + compose.yaml chạy thử
 configs/                 cấu hình router FRR và DNS – nguồn sự thật
-clab/abc.clab.yml        topology lab
-tests/smoke.sh           13 phép kiểm tra PASS/FAIL
+clab/so-do-mang-congty.clab.yml   topology lab
+tests/kiem-tra-nhanh.sh  13 phép kiểm tra PASS/FAIL
 docs/                    hướng dẫn từng bước, IP plan, nhật ký tuần, bằng chứng
 ```
 

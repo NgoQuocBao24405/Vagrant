@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# deploy.sh – dựng lab "abc" bằng containerlab. Chạy trong VM: cd /vagrant && ./scripts/deploy.sh
+# deploy.sh – dựng lab "congty" bằng containerlab. Chạy trong VM: cd /vagrant && ./scripts/deploy.sh
 # Tham số thêm được chuyển thẳng cho containerlab, vd: ./scripts/deploy.sh --reconfigure
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -19,15 +19,15 @@ sudo iptables -C DOCKER-USER -i br-srv -o br-srv -j ACCEPT 2>/dev/null \
 
 # 3) Dựng lab và đo thời gian
 start=$(date +%s)
-containerlab deploy -t clab/abc.clab.yml "$@"
+containerlab deploy -t clab/so-do-mang-congty.clab.yml "$@"
 echo "deploy_s=$(( $(date +%s) - start ))"
 
 # 4) Chờ OSPF hội tụ (r-hq có 2 neighbor Full), tối đa 120 s
 echo "Cho OSPF hoi tu..."
 for i in $(seq 1 60); do
-  n=$(docker exec clab-abc-r-hq vtysh -c "show ip ospf neighbor" 2>/dev/null | grep -c "Full" || true)
+  n=$(docker exec clab-congty-r-hq vtysh -c "show ip ospf neighbor" 2>/dev/null | grep -c "Full" || true)
   if [ "${n:-0}" -ge 2 ]; then echo "OSPF hoi tu sau ~$(( $(date +%s) - start )) s"; exit 0; fi
   sleep 2
 done
-echo "OSPF CHUA hoi tu sau 120 s – xem: docker exec clab-abc-r-hq vtysh -c 'show ip ospf neighbor'" >&2
+echo "OSPF CHUA hoi tu sau 120 s – xem: docker exec clab-congty-r-hq vtysh -c 'show ip ospf neighbor'" >&2
 exit 1

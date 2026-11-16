@@ -5,7 +5,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 for r in r-hq r-br r-edge r-isp; do
-  c="clab-abc-$r"
+  c="clab-congty-$r"
   docker exec "$c" vtysh -c "write memory" >/dev/null
   docker exec "$c" vtysh -c "show running-config" \
     | sed '1,/^Current configuration:/d' | sed '/^end$/d' > "configs/$r/frr.conf.new"

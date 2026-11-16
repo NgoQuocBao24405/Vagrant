@@ -1,26 +1,26 @@
-# TC18 – truy cập node: cổng SSH, containerlab exec, docker exec, graph (2026-11-16T14:23:06+00:00)
+# TC18 – truy cập node: cổng SSH, containerlab exec, docker exec, graph (2026-11-16T16:46:20+00:00)
 
 $ bash -c timeout 3 bash -c '</dev/tcp/172.20.20.11/22' && echo 'cong SSH 22 cua r-hq mo'
 cong SSH 22 cua r-hq mo
 
-$ containerlab exec -t clab/abc.clab.yml --label clab-node-name=pc-br1 --cmd ip -br addr show eth1
-14:23:06 INFO Parsing & checking topology file=abc.clab.yml
-14:23:06 INFO Executed command node=clab-abc-pc-br1 command="ip -br addr show eth1"
+$ containerlab exec -t clab/so-do-mang-congty.clab.yml --label clab-node-name=pc-br1 --cmd ip -br addr show eth1
+16:46:20 INFO Parsing & checking topology file=so-do-mang-congty.clab.yml
+16:46:20 INFO Executed command node=clab-congty-pc-br1 command="ip -br addr show eth1"
   stdout=
-  │ eth1@if111       UP             192.168.30.100/24 fe80::a8c1:abff:fe5f:dca/64 
+  │ eth1@if76        UP             192.168.30.100/24 fe80::a8c1:abff:fe93:fc47/64 
 
 
-$ docker exec clab-abc-r-hq vtysh -c show version
+$ docker exec clab-congty-r-hq vtysh -c show version
 FRRouting 10.7.1_git (r-hq) on Linux(6.8.0-86-generic).
 Copyright 1996-2005 Kunihiro Ishiguro, et al.
 configured with:
     '--prefix=/usr' '--sysconfdir=/etc' '--localstatedir=/var' '--sbindir=/usr/lib/frr' '--libdir=/usr/lib' '--enable-rpki' '--enable-vtysh' '--enable-multipath=64' '--enable-vty-group=frrvty' '--enable-user=frr' '--enable-group=frr' '--enable-pcre2posix' '--enable-scripting' 'CC=cc' 'CXX=c++'
 
-$ containerlab graph -t clab/abc.clab.yml --mermaid
-14:23:07 INFO Parsing & checking topology file=abc.clab.yml
-14:23:07 INFO Created mermaid diagram file: /home/vagrant/clab-runtime/clab-abc/graph/abc.clab.mermaid
+$ containerlab graph -t clab/so-do-mang-congty.clab.yml --mermaid
+16:46:21 INFO Parsing & checking topology file=so-do-mang-congty.clab.yml
+16:46:21 INFO Created mermaid diagram file: /home/vagrant/clab-runtime/clab-congty/graph/so-do-mang-congty.clab.mermaid
 
 $ bash -c curl -s -o /dev/null -w 'graph web http_code=%{http_code}\n' http://127.0.0.1:50080
 graph web http_code=200
-Mo tren Windows: http://192.168.56.10:50080 trong luc chay: containerlab graph -t clab/abc.clab.yml
+Mo tren Windows: http://192.168.56.10:50080 trong luc chay: containerlab graph -t clab/so-do-mang-congty.clab.yml
 => TC18: PASS

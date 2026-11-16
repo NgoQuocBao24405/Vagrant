@@ -4,7 +4,7 @@
 #   1) Docker Engine từ repo chính thức, ghim và giữ phiên bản (apt-mark hold)
 #   2) containerlab 0.82.0 (gói .deb chính thức, nhóm clab_admins)
 #   3) công cụ phụ (jq, dig, tcpdump…)
-#   4) kéo image router/host, build image dịch vụ abc/web và abc/dns
+#   4) kéo image router/host, build image dịch vụ congty/web và congty/dns
 set -euo pipefail
 
 DOCKER_WANT="${DOCKER_WANT:-29.9.2}"        # phiên bản Docker Engine mong muốn
@@ -87,8 +87,8 @@ for img in "$FRR_IMG" "$HOST_IMG"; do
 done
 
 log "Build image dich vu"
-docker build -q -t abc/web:1.0 "$REPO/docker/web" >/dev/null
-docker build -q -t abc/dns:1.0 -f "$REPO/docker/dns/Dockerfile" "$REPO" >/dev/null
+docker build -q -t congty/web:1.0 "$REPO/docker/web" >/dev/null
+docker build -q -t congty/dns:1.0 -f "$REPO/docker/dns/Dockerfile" "$REPO" >/dev/null
 
 # ---------- Tóm tắt ----------
 log "KET QUA"
@@ -96,5 +96,5 @@ docker version --format 'Docker Engine: {{.Server.Version}}'
 docker compose version
 containerlab version | grep -E 'version:'
 apt-mark showhold | tr '\n' ' '; echo
-docker images --format '{{.Repository}}:{{.Tag}}  {{.Size}}' | grep -E 'abc/|frr|netshoot' || true
+docker images --format '{{.Repository}}:{{.Tag}}  {{.Size}}' | grep -E 'congty/|frr|netshoot' || true
 echo "Xong. Thoat roi 'vagrant ssh' lai de nhan nhom docker va clab_admins."

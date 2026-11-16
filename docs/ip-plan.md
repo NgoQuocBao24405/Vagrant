@@ -1,4 +1,4 @@
-# Kế hoạch địa chỉ IP – lab "abc"
+# Kế hoạch địa chỉ IP – lab "congty"
 
 Nguồn sự thật duy nhất: mọi `frr.conf`, lệnh `exec` trong topology và zone DNS đều suy ra từ bảng này.
 
@@ -37,9 +37,9 @@ Nguồn sự thật duy nhất: mọi `frr.conf`, lệnh `exec` trong topology v
 | pc-hq1 | netshoot v0.16 | 172.20.20.21 | 192.168.10.100 | client HQ, iperf3 server |
 | pc-br1 | netshoot v0.16 | 172.20.20.22 | 192.168.30.100 | client Branch |
 | inet-host | netshoot v0.16 | 172.20.20.41 | 198.51.100.10 | máy "Internet" |
-| srv-web | abc/web:1.0 | 172.20.20.31 | 192.168.20.10 | Nginx |
-| srv-dns | abc/dns:1.0 | 172.20.20.32 | 192.168.20.53 | BIND9, zone abc.lab |
+| srv-web | congty/web:1.0 | 172.20.20.31 | 192.168.20.10 | Nginx |
+| srv-dns | congty/dns:1.0 | 172.20.20.32 | 192.168.20.53 | BIND9, zone congty.lab |
 
-## Zone abc.lab
+## Zone congty.lab
 
 `ns1` 192.168.20.53 · `web` 192.168.20.10 · `www` → web · `pc-hq1` 192.168.10.100 · `pc-br1` 192.168.30.100 · `r-hq/r-br/r-edge` 10.255.0.1/2/3 · `inet` 198.51.100.10

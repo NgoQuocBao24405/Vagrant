@@ -1,11 +1,11 @@
-# TC11 – topology cố ý chứa khóa extras phải bị từ chối (2026-11-16T14:22:39+00:00)
+# TC11 – topology cố ý chứa khóa extras phải bị từ chối (2026-11-16T16:45:55+00:00)
 
-$ grep -n -A2 ^    r-hq: /tmp/abc-legacy.clab.yml
+$ grep -n -A2 ^    r-hq: /tmp/congty-legacy.clab.yml
 23:    r-hq:
 24-      extras: {}
 25-      group: routers
 
-$ containerlab validate -t /tmp/abc-legacy.clab.yml
+$ containerlab validate -t /tmp/congty-legacy.clab.yml
           
    ERROR  
           

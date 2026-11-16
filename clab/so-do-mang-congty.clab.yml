@@ -1,7 +1,7 @@
-# Lab "abc" – mô phỏng mạng công ty ABC (HQ, Branch, ISP). containerlab 0.82.0
+# Lab "congty" – mô phỏng mạng công ty (HQ, Branch, ISP). containerlab 0.82.0
 # Chạy trong VM:  cd /vagrant && ./scripts/deploy.sh
 # Sơ đồ IP: docs/ip-plan.md
-name: abc
+name: congty
 
 mgmt:
   network: clab
@@ -71,7 +71,7 @@ topology:
         - iperf3 -s -D
     srv-web:
       kind: linux
-      image: abc/web:1.0
+      image: congty/web:1.0
       mgmt-ipv4: 172.20.20.31
       exec:
         - ip link set eth1 up
@@ -79,11 +79,11 @@ topology:
         - ip route replace default via 192.168.20.1 dev eth1
     srv-dns:
       kind: linux
-      image: abc/dns:1.0
+      image: congty/dns:1.0
       mgmt-ipv4: 172.20.20.32
       binds:
         - ../configs/srv-dns/named.conf:/etc/bind/named.conf:ro
-        - ../configs/srv-dns/db.abc.lab:/etc/bind/db.abc.lab:ro
+        - ../configs/srv-dns/db.congty.lab:/etc/bind/db.congty.lab:ro
       exec:
         - ip link set eth1 up
         - ip addr add 192.168.20.53/24 dev eth1
