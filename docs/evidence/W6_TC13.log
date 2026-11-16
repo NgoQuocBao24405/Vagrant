@@ -1,0 +1,307 @@
+# TC13 – OSPF: mỗi router 2 neighbor Full, r-br có route liên vùng tới LAN HQ (2026-11-16T14:23:00+00:00)
+thoi_gian_hoi_tu_sau_deploy=4s (cho toi da 90s)
+
+$ docker exec clab-abc-r-hq vtysh -c show ip ospf neighbor
+
+Neighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL
+10.255.0.3        1 Full/-          6.071s            33.944s 10.0.0.2        eth1:10.0.0.1                        0     0     0
+10.255.0.2        1 Full/-          6.007s            33.988s 10.0.0.6        eth2:10.0.0.5                        2     0     0
+
+r-hq: 2 neighbor Full
+
+$ docker exec clab-abc-r-br vtysh -c show ip ospf neighbor
+
+Neighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL
+10.255.0.1        1 Full/-          6.284s            33.712s 10.0.0.5        eth1:10.0.0.6                        0     0     0
+10.255.0.3        1 Full/-          6.203s            33.812s 10.0.0.10       eth2:10.0.0.9                        0     0     0
+
+r-br: 2 neighbor Full
+
+$ docker exec clab-abc-r-edge vtysh -c show ip ospf neighbor
+
+Neighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL
+10.255.0.1        1 Full/-          6.636s            33.361s 10.0.0.1        eth1:10.0.0.2                        0     0     0
+10.255.0.2        1 Full/-          6.492s            33.505s 10.0.0.9        eth2:10.0.0.10                       1     0     0
+
+r-edge: 2 neighbor Full
+
+$ docker exec clab-abc-r-br vtysh -c show ip ospf route
+============ OSPF network routing table ============
+N IA 10.0.0.0/30           [20] area: 0.0.0.1
+                           via 10.0.0.5, eth1
+                           via 10.0.0.10, eth2
+N    10.0.0.4/30           [10] area: 0.0.0.1
+                           directly attached to eth1
+N    10.0.0.8/30           [10] area: 0.0.0.1
+                           directly attached to eth2
+N IA 10.255.0.1/32         [10] area: 0.0.0.1
+                           via 10.0.0.5, eth1
+N    10.255.0.2/32         [0] area: 0.0.0.1
+                           directly attached to lo
+N IA 10.255.0.3/32         [10] area: 0.0.0.1
+                           via 10.0.0.10, eth2
+N IA 192.168.10.0/24       [20] area: 0.0.0.1
+                           via 10.0.0.5, eth1
+N IA 192.168.20.0/24       [20] area: 0.0.0.1
+                           via 10.0.0.5, eth1
+N    192.168.30.0/24       [10] area: 0.0.0.1
+                           directly attached to eth3
+
+============ OSPF router routing table =============
+R    10.255.0.1            [10] area: 0.0.0.1, ABR
+                           via 10.0.0.5, eth1
+R    10.255.0.3            [10] area: 0.0.0.1, ABR, ASBR
+                           via 10.0.0.10, eth2
+
+============ OSPF external routing table ===========
+N E2 0.0.0.0/0             [10/10] tag: 0
+                           via 10.0.0.10, eth2
+
+
+
+$ docker exec clab-abc-r-br vtysh -c show ip route ospf
+Codes: K - kernel route, C - connected, L - local, S - static,
+       R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+       T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR,
+       f - OpenFabric, t - Table-Direct,
+       > - selected route, * - FIB route, q - queued, r - rejected, b - backup
+       t - trapped, o - offload failure
+
+IPv4 unicast VRF default:
+O>* 0.0.0.0/0 [110/10] via 10.0.0.10, eth2, weight 1, 00:00:02
+O>* 10.0.0.0/30 [110/20] via 10.0.0.5, eth1, weight 1, 00:00:02
+  *                      via 10.0.0.10, eth2, weight 1, 00:00:02
+O>* 10.255.0.1/32 [110/10] via 10.0.0.5, eth1, weight 1, 00:00:02
+O>* 10.255.0.3/32 [110/10] via 10.0.0.10, eth2, weight 1, 00:00:02
+O>* 192.168.10.0/24 [110/20] via 10.0.0.5, eth1, weight 1, 00:00:02
+O>* 192.168.20.0/24 [110/20] via 10.0.0.5, eth1, weight 1, 00:00:02
+
+$ docker exec clab-abc-r-hq vtysh -c show ip ospf border-routers
+============ OSPF router routing table =============
+R    10.255.0.3            [20] area: 0.0.0.1, ABR, ASBR
+                           via 10.0.0.6, eth2
+                           [10] area: 0.0.0.0, ABR, ASBR
+                           via 10.0.0.2, eth1
+
+
+
+$ docker exec clab-abc-r-br vtysh -c show ip ospf database summary
+
+       OSPF Router with ID (10.255.0.2)
+
+
+                Summary Link States (Area 0.0.0.1)
+
+  LS age: 18
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 10.0.0.0 (summary Network Number)
+  Advertising Router: 10.255.0.1
+  LS Seq Number: 80000001
+  Checksum: 0xda66
+  Length: 28
+
+  Network Mask: /30
+        TOS: 0  Metric: 10
+
+  LS age: 17
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 10.0.0.0 (summary Network Number)
+  Advertising Router: 10.255.0.3
+  LS Seq Number: 80000001
+  Checksum: 0xce70
+  Length: 28
+
+  Network Mask: /30
+        TOS: 0  Metric: 10
+
+  LS age: 3
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 10.0.0.4 (summary Network Number)
+  Advertising Router: 10.255.0.3
+  LS Seq Number: 80000001
+  Checksum: 0x0b26
+  Length: 28
+
+  Network Mask: /30
+        TOS: 0  Metric: 20
+
+  LS age: 3
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 10.0.0.8 (summary Network Number)
+  Advertising Router: 10.255.0.1
+  LS Seq Number: 80000001
+  Checksum: 0xee40
+  Length: 28
+
+  Network Mask: /30
+        TOS: 0  Metric: 20
+
+  LS age: 18
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 10.255.0.1 (summary Network Number)
+  Advertising Router: 10.255.0.1
+  LS Seq Number: 80000001
+  Checksum: 0x7ec8
+  Length: 28
+
+  Network Mask: /32
+        TOS: 0  Metric: 0
+
+  LS age: 3
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 10.255.0.1 (summary Network Number)
+  Advertising Router: 10.255.0.3
+  LS Seq Number: 80000001
+  Checksum: 0xd664
+  Length: 28
+
+  Network Mask: /32
+        TOS: 0  Metric: 10
+
+  LS age: 3
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 10.255.0.3 (summary Network Number)
+  Advertising Router: 10.255.0.1
+  LS Seq Number: 80000001
+  Checksum: 0xce6c
+  Length: 28
+
+  Network Mask: /32
+        TOS: 0  Metric: 10
+
+  LS age: 17
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 10.255.0.3 (summary Network Number)
+  Advertising Router: 10.255.0.3
+  LS Seq Number: 80000001
+  Checksum: 0x5ee4
+  Length: 28
+
+  Network Mask: /32
+        TOS: 0  Metric: 0
+
+  LS age: 17
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 192.168.10.0 (summary Network Number)
+  Advertising Router: 10.255.0.1
+  LS Seq Number: 80000001
+  Checksum: 0x4f85
+  Length: 28
+
+  Network Mask: /24
+        TOS: 0  Metric: 10
+
+  LS age: 3
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 192.168.10.0 (summary Network Number)
+  Advertising Router: 10.255.0.3
+  LS Seq Number: 80000001
+  Checksum: 0xa721
+  Length: 28
+
+  Network Mask: /24
+        TOS: 0  Metric: 20
+
+  LS age: 17
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 192.168.20.0 (summary Network Number)
+  Advertising Router: 10.255.0.1
+  LS Seq Number: 80000001
+  Checksum: 0xe0e9
+  Length: 28
+
+  Network Mask: /24
+        TOS: 0  Metric: 10
+
+  LS age: 3
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x6  
+  LS Type: summary-LSA
+  Link State ID: 192.168.20.0 (summary Network Number)
+  Advertising Router: 10.255.0.3
+  LS Seq Number: 80000001
+  Checksum: 0x3985
+  Length: 28
+
+  Network Mask: /24
+        TOS: 0  Metric: 20
+
+
+$ docker exec clab-abc-r-hq vtysh -c show ip ospf interface eth2
+eth2 is up
+  ifindex 97, MTU 9500 bytes, BW 10000 Mbit <UP,LOWER_UP,BROADCAST,RUNNING,MULTICAST>
+  Internet Address 10.0.0.5/30, Broadcast 10.0.0.7, Area 0.0.0.1
+  MTU mismatch detection: enabled
+  Router ID 10.255.0.1, Network Type POINTOPOINT, Cost: 10
+  Transmit Delay is 1 sec, State Point-To-Point, Priority 1
+  No backup designated router on this network
+  Multicast group memberships: OSPFAllRouters
+  Timer intervals configured, Hello 10s, Dead 40s, Wait 40s, Retransmit 5
+    Hello due in 2.519s
+  Neighbor Count is 1, Adjacent neighbor count is 1
+  Graceful Restart hello delay: 10s
+  LSA retransmissions: 1
+
+
+$ docker exec clab-abc-r-br vtysh -c show ip ospf neighbor json
+{
+  "neighbors":{
+    "10.255.0.1":[
+      {
+        "nbrState":"Full\/-",
+        "nbrPriority":1,
+        "converged":"Full",
+        "role":"DROther",
+        "upTimeInMsec":7618,
+        "routerDeadIntervalTimerDueMsec":32378,
+        "upTime":"7.618s",
+        "deadTime":"32.378s",
+        "ifaceAddress":"10.0.0.5",
+        "ifaceName":"eth1:10.0.0.6",
+        "linkStateRetransmissionListCounter":0,
+        "linkStateRequestListCounter":0,
+        "databaseSummaryListCounter":0
+      }
+    ],
+    "10.255.0.3":[
+      {
+        "nbrState":"Full\/-",
+        "nbrPriority":1,
+        "converged":"Full",
+        "role":"DROther",
+        "upTimeInMsec":7537,
+        "routerDeadIntervalTimerDueMsec":32478,
+        "upTime":"7.537s",
+        "deadTime":"32.478s",
+        "ifaceAddress":"10.0.0.10",
+        "ifaceName":"eth2:10.0.0.9",
+        "linkStateRetransmissionListCounter":0,
+        "linkStateRequestListCounter":0,
+        "databaseSummaryListCounter":0
+      }
+    ]
+  }
+}
+=> TC13: PASS

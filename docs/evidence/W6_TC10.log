@@ -1,0 +1,6 @@
+# TC10 – containerlab validate topology abc (2026-11-16T14:22:38+00:00)
+
+$ containerlab validate -t clab/abc.clab.yml
+14:22:39 INFO Parsing & checking topology file=abc.clab.yml
+14:22:39 INFO Topology is valid name=abc nodes=10 links=10
+=> TC10: PASS
