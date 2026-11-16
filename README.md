@@ -68,4 +68,4 @@ docs/                    hướng dẫn từng bước, IP plan, nhật ký tu�
 
 Nhánh: `bao` (làm việc) → `dev` (gộp, chạy thử) → `main` (ổn định). Chi tiết ở Bước 4 của hướng dẫn.
 
-Hướng dẫn chi tiết tuần 1–5: [docs/HuongDan_Tuan1-5.md](docs/HuongDan_Tuan1-5.md) · Tuần 6: [docs/HuongDan_Tuan6.md](docs/HuongDan_Tuan6.md) · Bảng IP: [docs/ip-plan.md](docs/ip-plan.md)
+Hướng dẫn chi tiết tuần 1–5: [docs/HuongDan_Tuan1-5.md](docs/HuongDan_Tuan1-5.md) · Bảng IP: [docs/ip-plan.md](docs/ip-plan.md)

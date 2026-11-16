@@ -11,3 +11,4 @@ offline/
 # VS Code: chỉ commit settings.json
 .vscode/*
 !.vscode/settings.json
+docs/HuongDan_*.md
