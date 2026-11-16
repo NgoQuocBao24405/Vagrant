@@ -46,7 +46,7 @@ if ($vg) {
     Add-Result ($(if ($vg.Trim() -eq '2.4.9') {'PASS'} else {'WARN'})) 'Vagrant 2.4.9' $vg.Trim()
     $boxes = vagrant box list -i 2>$null | Out-String
     $hasBox = $boxes -match 'bento/ubuntu-24.04\s+\(virtualbox, 202510.26.0'
-    Add-Result ($(if ($hasBox) {'PASS'} else {'FAIL'})) 'Box bento/ubuntu-24.04 202510.26.0 trong cache' ($(if ($hasBox) {'co'} else {'chua co - xem docs/HuongDan buoc 2'}))
+    Add-Result ($(if ($hasBox) {'PASS'} else {'FAIL'})) 'Box bento/ubuntu-24.04 202510.26.0 trong cache' ($(if ($hasBox) {'co'} else {'chua co'}))
     $plugins = vagrant plugin list 2>$null | Out-String
     Add-Result ($(if ($plugins -match 'vagrant-vbguest') {'WARN'} else {'PASS'})) 'Khong dung plugin vagrant-vbguest' $plugins.Trim()
 } else { Add-Result 'FAIL' 'Vagrant 2.4.9' 'khong chay duoc lenh vagrant' }
@@ -71,6 +71,6 @@ foreach ($r in $results) {
 }
 $nFail = @($results | Where-Object KetQua -eq 'FAIL').Count
 ''
-if ($nFail -gt 0) { Write-Host "$nFail muc FAIL - xem docs\HuongDan_Tuan1-5.md" -ForegroundColor Red; exit 1 }
+if ($nFail -gt 0) { Write-Host "$nFail muc FAIL" -ForegroundColor Red; exit 1 }
 Write-Host 'Khong co FAIL. WARN = nen sua nhung van chay duoc.' -ForegroundColor Green
 exit 0
