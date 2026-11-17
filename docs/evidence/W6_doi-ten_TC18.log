@@ -1,0 +1,33 @@
+# TC18 – truy cập node: cổng SSH, ssh theo tên, containerlab exec, docker exec, graph (2026-11-17T03:36:43+00:00)
+
+$ bash -c timeout 3 bash -c '</dev/tcp/172.20.20.11/22' && echo 'cong SSH 22 cua router-tru-so mo'
+cong SSH 22 cua router-tru-so mo
+
+$ containerlab exec -t clab/so-do-mang-congty.clab.yml --label clab-node-name=may-tinh-chi-nhanh --cmd ip -br addr show eth1
+03:36:43 INFO Parsing & checking topology file=so-do-mang-congty.clab.yml
+03:36:43 INFO Executed command node=may-tinh-chi-nhanh command="ip -br addr show eth1"
+  stdout=
+  │ eth1@if74        UP             192.168.30.100/24 fe80::a8c1:abff:fe51:1962/64 
+
+
+$ docker exec router-tru-so vtysh -c show version
+FRRouting 10.7.1_git (router-tru-so) on Linux(6.8.0-86-generic).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+configured with:
+    '--prefix=/usr' '--sysconfdir=/etc' '--localstatedir=/var' '--sbindir=/usr/lib/frr' '--libdir=/usr/lib' '--enable-rpki' '--enable-vtysh' '--enable-multipath=64' '--enable-vty-group=frrvty' '--enable-user=frr' '--enable-group=frr' '--enable-pcre2posix' '--enable-scripting' 'CC=cc' 'CXX=c++'
+
+$ ssh -o BatchMode=yes router-tru-so show ip ospf neighbor
+
+Neighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL
+10.255.0.3        1 Full/-          8.096s            32.251s 10.0.0.2        eth1:10.0.0.1                        0     0     0
+10.255.0.2        1 Full/-          8.027s            31.989s 10.0.0.6        eth2:10.0.0.5                        2     0     0
+
+
+$ containerlab graph -t clab/so-do-mang-congty.clab.yml --mermaid
+03:36:44 INFO Parsing & checking topology file=so-do-mang-congty.clab.yml
+03:36:44 INFO Created mermaid diagram file: /home/vagrant/clab-runtime/clab-congty/graph/so-do-mang-congty.clab.mermaid
+
+$ bash -c curl -s -o /dev/null -w 'graph web http_code=%{http_code}\n' http://127.0.0.1:50080
+graph web http_code=200
+Mo tren Windows: http://192.168.56.10:50080 trong luc chay: containerlab graph -t clab/so-do-mang-congty.clab.yml
+=> TC18: PASS

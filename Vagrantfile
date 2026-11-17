@@ -1,5 +1,5 @@
 # -*- mode: ruby -*-
-# Vagrantfile - VM "clab-host": Ubuntu 24.04 + Docker Engine + containerlab
+# Vagrantfile - VM "may-ao-lab": Ubuntu 24.04 + Docker Engine + containerlab
 # Provider: VirtualBox 7.2.x, Vagrant 2.4.9
 #
 # Bien moi truong (khong phai sua file):
@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_version      = "202510.26.0"   # ghim phien ban box de dung lai y het
   config.vm.box_url          = BOX_URL if BOX_URL && !BOX_URL.empty?
   config.vm.box_check_update = false            # khong hoi HCP Vagrant moi lan up
-  config.vm.hostname         = "clab-host"
+  config.vm.hostname         = "may-ao-lab"
   config.vm.boot_timeout     = 600              # may cham hoac VirtualBox chay che do NEM
 
   # NIC1 luon la NAT (ra Internet, SSH 127.0.0.1:2222). NIC2 host-only de Windows thay VM.
@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant"
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name   = "clab-host"
+    vb.name   = "may-ao-lab"
     vb.cpus   = VM_CPUS
     vb.memory = VM_MEM
     vb.gui    = false
@@ -38,17 +38,17 @@ Vagrant.configure("2") do |config|
 
   # Cai Docker, containerlab, build image. Chay o lan "vagrant up" dau tien
   # hoac khi goi "vagrant provision".
-  config.vm.provision "setup", type: "shell", path: "scripts/provision.sh"
+  config.vm.provision "setup", type: "shell", path: "scripts/cai-dat-may-ao.sh"
 
-  # Bridge br-srv (switch LAN may chu cua lab) mat sau moi lan khoi dong lai VM,
-  # nen tao lai o MOI lan up/reload. Kem luat cho phep goi di qua br-srv,
-  # vi Docker dat FORWARD policy DROP (scripts/deploy.sh cung lam lai viec nay).
-  config.vm.provision "br-srv", type: "shell", run: "always", inline: <<-SHELL
-    ip link show br-srv >/dev/null 2>&1 || ip link add br-srv type bridge
-    ip link set br-srv up
+  # Bridge switch-may-chu (switch LAN may chu cua lab) mat sau moi lan khoi dong lai VM,
+  # nen tao lai o MOI lan up/reload. Kem luat cho phep goi di qua switch-may-chu,
+  # vi Docker dat FORWARD policy DROP (scripts/dung-lab.sh cung lam lai viec nay).
+  config.vm.provision "switch-may-chu", type: "shell", run: "always", inline: <<-SHELL
+    ip link show switch-may-chu >/dev/null 2>&1 || ip link add switch-may-chu type bridge
+    ip link set switch-may-chu up
     if iptables -nL DOCKER-USER >/dev/null 2>&1; then
-      iptables -C DOCKER-USER -i br-srv -o br-srv -j ACCEPT 2>/dev/null || \
-        iptables -I DOCKER-USER -i br-srv -o br-srv -j ACCEPT
+      iptables -C DOCKER-USER -i switch-may-chu -o switch-may-chu -j ACCEPT 2>/dev/null || \
+        iptables -I DOCKER-USER -i switch-may-chu -o switch-may-chu -j ACCEPT
     fi
   SHELL
 end

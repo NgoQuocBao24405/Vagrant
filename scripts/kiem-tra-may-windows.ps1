@@ -1,6 +1,6 @@
-# host-check.ps1 - kiem tra may Windows truoc khi dung lab (in PASS/FAIL/WARN tung muc)
+# kiem-tra-may-windows.ps1 - kiem tra may Windows truoc khi dung lab (in PASS/FAIL/WARN tung muc)
 # Chay: mo PowerShell (nen Run as Administrator) trong thu muc repo:
-#   powershell -ExecutionPolicy Bypass -File .\scripts\host-check.ps1
+#   powershell -ExecutionPolicy Bypass -File .\scripts\kiem-tra-may-windows.ps1
 # Exit code 0 = khong co FAIL.
 
 $ErrorActionPreference = 'SilentlyContinue'
@@ -61,7 +61,7 @@ if ($git) {
 
 # 6. Ban sao luu box (khuyen nghi)
 $arch = 'D:\vagrant-boxes\metadata.json'
-Add-Result ($(if (Test-Path $arch) {'PASS'} else {'WARN'})) 'Ban luu tru box cuc bo' ($(if (Test-Path $arch) {$arch} else {'chua co - chay scripts\box-archive.ps1'}))
+Add-Result ($(if (Test-Path $arch) {'PASS'} else {'WARN'})) 'Ban luu tru box cuc bo' ($(if (Test-Path $arch) {$arch} else {'chua co - chay scripts\luu-tru-box.ps1'}))
 
 # In ket qua
 ''

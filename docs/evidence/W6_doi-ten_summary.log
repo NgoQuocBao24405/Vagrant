@@ -1,0 +1,9 @@
+# W6 tổng kết (2026-11-17T03:37:34+00:00)
+PASS  TC10  validate so-do-mang-congty.clab.yml không lỗi
+PASS  TC11  bản có extras bị báo lỗi (exit=1)
+PASS  TC12  9 container, switch-may-chu 3 cổng
+PASS  TC13  3 router x 2 neighbor Full; router-chi-nhanh thấy 192.168.10/20.0 dạng IA
+PASS  TC18  ssh port, ssh router-tru-so, exec, graph đều phản hồi
+PASS  TC19  description TEST-TC19 còn sau destroy/deploy
+----
+TAT CA PASS

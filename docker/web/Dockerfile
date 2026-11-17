@@ -1,4 +1,4 @@
-# congty/web:1.0 – máy chủ web nội bộ của công ty (srv-web, 192.168.20.10)
+# congty/web:1.0 – máy chủ web nội bộ của công ty (may-chu-web, 192.168.20.10)
 # Lệnh ít thay đổi đặt trước (cache layer), file hay sửa đặt sau.
 FROM nginx:1.30.6-alpine
 # iproute2: containerlab gán IP cho eth1 bằng lệnh "ip"

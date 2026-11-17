@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# destroy.sh – gỡ lab "congty". Mặc định GIỮ thư mục lab (cấu hình đã lưu).
-#   ./scripts/destroy.sh               gỡ container, giữ thư mục lab
-#   ./scripts/destroy.sh --force-clean gỡ và XÓA luôn thư mục lab (hỏi xác nhận)
+# go-lab.sh – gỡ lab "congty". Mặc định GIỮ thư mục lab (cấu hình đã lưu).
+#   ./scripts/go-lab.sh               gỡ container, giữ thư mục lab
+#   ./scripts/go-lab.sh --force-clean gỡ và XÓA luôn thư mục lab (hỏi xác nhận)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export CLAB_LABDIR_BASE="${CLAB_LABDIR_BASE:-$HOME/clab-runtime}"

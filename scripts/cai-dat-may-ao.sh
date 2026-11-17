@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# provision.sh – chuẩn bị VM clab-host. Vagrant chạy file này bằng root.
+# cai-dat-may-ao.sh – chuẩn bị VM may-ao-lab. Vagrant chạy file này bằng root.
 # Idempotent: chạy lại bao nhiêu lần cũng được, bước nào đã xong thì bỏ qua.
 #   1) Docker Engine từ repo chính thức, ghim và giữ phiên bản (apt-mark hold)
 #   2) containerlab 0.82.0 (gói .deb chính thức, nhóm clab_admins)
@@ -73,6 +73,9 @@ apt-get install -y -q jq bc dnsutils tcpdump tree >/dev/null
 
 # Thư mục runtime của lab nằm trên ext4 của VM, KHÔNG nằm trên /vagrant (vboxsf)
 install -d -o vagrant -g vagrant /home/vagrant/clab-runtime
+
+# SSH vào router chỉ cần "ssh router-tru-so" (khóa + ~/.ssh/config cho user vagrant)
+sudo -u vagrant -H bash "$REPO/scripts/cau-hinh-ssh.sh"
 
 # Mỗi lần "vagrant ssh" tự vào /vagrant và có sẵn biến môi trường cho containerlab
 cat >/etc/profile.d/lab.sh <<'PROFILE'

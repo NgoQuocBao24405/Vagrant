@@ -1,7 +1,7 @@
-# box-archive.ps1 - xuat box tu cache Vagrant thanh file .box, tinh SHA256, tao catalog metadata.json
+# luu-tru-box.ps1 - xuat box tu cache Vagrant thanh file .box, tinh SHA256, tao catalog metadata.json
 # Ly do: HCP Vagrant het ho tro 02/11/2026 va du kien go toan bo 31/12/2026.
 # Chay trong thu muc repo:
-#   powershell -ExecutionPolicy Bypass -File .\scripts\box-archive.ps1
+#   powershell -ExecutionPolicy Bypass -File .\scripts\luu-tru-box.ps1
 #   (tuy chon) -Dest E:\vagrant-boxes  de luu sang o khac
 param(
     [string]$Dest = 'D:\vagrant-boxes',
