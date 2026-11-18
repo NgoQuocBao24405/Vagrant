@@ -1,0 +1,6 @@
+# TC10 – containerlab validate topology congty (2026-11-16T16:45:55+00:00)
+
+$ containerlab validate -t clab/so-do-mang-congty.clab.yml
+16:45:55 INFO Parsing & checking topology file=so-do-mang-congty.clab.yml
+16:45:55 INFO Topology is valid name=congty nodes=10 links=10
+=> TC10: PASS

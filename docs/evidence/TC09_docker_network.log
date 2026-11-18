@@ -1,0 +1,114 @@
+# TC09 - khao sat mang Docker (2026-11-08T16:16:31+00:00)
+
+$ docker compose -f docker/compose.yaml ps
+NAME            IMAGE         COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+abc-svc-dns-1   abc/dns:1.0   "named -g -4 -u name…"   dns       46 seconds ago   Up 45 seconds (healthy)   127.0.0.1:5353->53/tcp, 127.0.0.1:5353->53/udp
+abc-svc-web-1   abc/web:1.0   "/docker-entrypoint.…"   web       46 seconds ago   Up 34 seconds (healthy)   127.0.0.1:8080->80/tcp
+
+$ docker network ls
+NETWORK ID     NAME               DRIVER    SCOPE
+d4339c700496   abc-svc_svc-test   bridge    local
+1b13c7c3961e   bridge             bridge    local
+b371d8eac830   host               host      local
+50617f365ff9   none               null      local
+
+$ docker network inspect abc-svc_svc-test
+[
+    {
+        "Name": "abc-svc_svc-test",
+        "Id": "d4339c700496e93510a1d310a40ba8dfc5ec2622e75e5d1017eddd1542a5f092",
+        "Created": "2026-11-08T16:15:45.263127158Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {},
+        "Labels": {
+            "com.docker.compose.config-hash": "4e237518a4e6dadfa745cff105573451ec469c6c3b09933263f4ba16e7c118d5",
+            "com.docker.compose.network": "svc-test",
+            "com.docker.compose.project": "abc-svc",
+            "com.docker.compose.version": "5.6.1"
+        },
+        "Containers": {
+            "2c99eb0622dddf4cb9fa33ccf6fbd952c857e5b201a4777c051a0ad47b620a85": {
+                "Name": "abc-svc-web-1",
+                "EndpointID": "3ee8b88147281c7e25e142580d0e2f71158081a89772d2a53fc5ac91641baaf6",
+                "MacAddress": "c2:4e:77:e5:52:3b",
+                "IPv4Address": "172.18.0.3/16",
+                "IPv6Address": ""
+            },
+            "8dfa9f04f4023dfcc4c005334616153dcf56c950535bd8df6511d8db90c45216": {
+                "Name": "abc-svc-dns-1",
+                "EndpointID": "0131cb1b1d117a19baa411bd3f82def28652c539d75ef90b67572439b24393fc",
+                "MacAddress": "96:e3:90:58:c8:11",
+                "IPv4Address": "172.18.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.18.0.0/16": {
+                        "IPsInUse": 5,
+                        "DynamicIPsAvailable": 65531
+                    }
+                }
+            }
+        }
+    }
+]
+
+$ ip -br link show type veth
+vethfd39cb2@if2  UP             22:ae:d3:c2:0e:76 <BROADCAST,MULTICAST,UP,LOWER_UP> 
+vethd78cc86@if2  UP             1a:4d:29:0a:2b:7d <BROADCAST,MULTICAST,UP,LOWER_UP> 
+
+$ bridge link
+15: vethfd39cb2@eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master br-d4339c700496 state forwarding priority 32 cost 2 
+16: vethd78cc86@eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master br-d4339c700496 state forwarding priority 32 cost 2 
+
+# container dns: abc-svc-dns-1 PID=9948
+
+$ sudo nsenter -t 9948 -n ip -br addr
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+eth0@if15        UP             172.18.0.2/16 
+
+$ sudo iptables -t nat -S | grep -i docker
+-N DOCKER
+-A PREROUTING -m addrtype --dst-type LOCAL -j DOCKER
+-A OUTPUT ! -d 127.0.0.0/8 -m addrtype --dst-type LOCAL -j DOCKER
+-A POSTROUTING -s 172.17.0.0/16 ! -o docker0 -j MASQUERADE
+-A DOCKER -d 127.0.0.1/32 ! -i br-d4339c700496 -p tcp -m tcp --dport 5353 -j DNAT --to-destination 172.18.0.2:53
+-A DOCKER -d 127.0.0.1/32 ! -i br-d4339c700496 -p udp -m udp --dport 5353 -j DNAT --to-destination 172.18.0.2:53
+-A DOCKER -d 127.0.0.1/32 ! -i br-d4339c700496 -p tcp -m tcp --dport 8080 -j DNAT --to-destination 172.18.0.3:80
+
+$ docker compose -f docker/compose.yaml down
+ Container abc-svc-web-1 Stopping 
+ Container abc-svc-web-1 Stopped 
+ Container abc-svc-web-1 Removing 
+ Container abc-svc-web-1 Removed 
+ Container abc-svc-dns-1 Stopping 
+ Container abc-svc-dns-1 Stopped 
+ Container abc-svc-dns-1 Removing 
+ Container abc-svc-dns-1 Removed 
+ Network abc-svc_svc-test Removing 
+ Network abc-svc_svc-test Removed 
+
+$ ip -br link show type veth; echo "(so veth: $(ip -br link show type veth | wc -l))"
+(so veth: 0)

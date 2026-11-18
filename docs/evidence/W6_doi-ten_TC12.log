@@ -1,0 +1,172 @@
+# TC12 – deploy lab congty: 9 container + switch-may-chu 3 cổng (2026-11-17T03:36:18+00:00)
+
+$ ./scripts/dung-lab.sh
+03:36:20 INFO Containerlab started version=0.82.0
+03:36:21 INFO Parsing & checking topology file=so-do-mang-congty.clab.yml
+03:36:21 INFO Applying link change without node lifecycle action node=switch-may-chu change="added link"
+03:36:21 INFO Applying link change without node lifecycle action node=switch-may-chu change="added link"
+03:36:21 INFO Applying link change without node lifecycle action node=switch-may-chu change="added link"
+03:36:21 INFO Creating docker network name=clab IPv4 subnet=172.20.20.0/24 IPv6 subnet="" MTU=0
+03:36:21 INFO Creating lab directory path=/home/vagrant/clab-runtime/clab-congty
+03:36:21 INFO Creating node node=may-chu-dns
+03:36:21 INFO Creating container name=may-chu-dns
+03:36:21 INFO Creating node node=may-tinh-tru-so
+03:36:21 INFO Creating container name=may-tinh-tru-so
+03:36:21 INFO Creating node node=may-chu-web
+03:36:21 INFO Creating container name=may-chu-web
+03:36:21 INFO Creating node node=may-tinh-chi-nhanh
+03:36:21 INFO Creating container name=may-tinh-chi-nhanh
+03:36:23 INFO Creating node node=router-chi-nhanh
+03:36:23 INFO Creating container name=router-chi-nhanh
+03:36:23 INFO Creating node node=router-bien
+03:36:23 INFO Creating node node=router-nha-mang
+03:36:23 INFO Creating node node=router-tru-so
+03:36:23 INFO Creating container name=router-bien
+03:36:23 INFO Creating container name=router-tru-so
+03:36:23 INFO Creating container name=router-nha-mang
+03:36:24 INFO Creating node node=may-ngoai-internet
+03:36:24 INFO Creating container name=may-ngoai-internet
+03:36:25 INFO Creating link link="router-bien:eth1 -- router-tru-so:eth1"
+03:36:25 INFO Created link: router-tru-so:eth1 ▪┄┄▪ router-bien:eth1
+03:36:25 INFO Creating link link="router-chi-nhanh:eth1 -- router-tru-so:eth2"
+03:36:25 INFO Created link: router-tru-so:eth2 ▪┄┄▪ router-chi-nhanh:eth1
+03:36:25 INFO Creating link link="router-bien:eth2 -- router-chi-nhanh:eth2"
+03:36:25 INFO Created link: router-chi-nhanh:eth2 ▪┄┄▪ router-bien:eth2
+03:36:25 INFO Creating link link="router-bien:eth3 -- router-nha-mang:eth1"
+03:36:25 INFO Created link: router-bien:eth3 ▪┄┄▪ router-nha-mang:eth1
+03:36:25 INFO Creating link link="may-tinh-tru-so:eth1 -- router-tru-so:eth3"
+03:36:26 INFO Created link: router-tru-so:eth3 ▪┄┄▪ may-tinh-tru-so:eth1
+03:36:26 INFO Creating link link="router-tru-so:eth4 -- switch-may-chu:sw-tru-so"
+03:36:26 INFO Created link: router-tru-so:eth4 ▪┄┄▪ switch-may-chu:sw-tru-so
+03:36:26 INFO Creating link link="may-chu-web:eth1 -- switch-may-chu:sw-web"
+03:36:26 INFO Created link: may-chu-web:eth1 ▪┄┄▪ switch-may-chu:sw-web
+03:36:26 INFO Creating link link="may-chu-dns:eth1 -- switch-may-chu:sw-dns"
+03:36:26 INFO Created link: may-chu-dns:eth1 ▪┄┄▪ switch-may-chu:sw-dns
+03:36:26 INFO Creating link link="may-tinh-chi-nhanh:eth1 -- router-chi-nhanh:eth3"
+03:36:26 INFO Created link: router-chi-nhanh:eth3 ▪┄┄▪ may-tinh-chi-nhanh:eth1
+03:36:26 INFO Creating link link="may-ngoai-internet:eth1 -- router-nha-mang:eth2"
+03:36:26 INFO Created link: router-nha-mang:eth2 ▪┄┄▪ may-ngoai-internet:eth1
+03:36:28 INFO Executed command node=may-chu-dns command="ip link set eth1 up" stdout=""
+03:36:28 INFO Executed command node=may-chu-dns command="ip addr add 192.168.20.53/24 dev eth1" stdout=""
+03:36:28 INFO Executed command node=may-chu-dns command="ip route replace default via 192.168.20.1 dev eth1" stdout=""
+03:36:28 INFO Executed command node=may-chu-web command="ip link set eth1 up" stdout=""
+03:36:28 INFO Executed command node=may-chu-web command="ip addr add 192.168.20.10/24 dev eth1" stdout=""
+03:36:28 INFO Executed command node=may-chu-web command="ip route replace default via 192.168.20.1 dev eth1" stdout=""
+03:36:28 INFO Executed command node=may-ngoai-internet command="ip link set eth1 up" stdout=""
+03:36:28 INFO Executed command node=may-ngoai-internet command="ip addr add 198.51.100.10/24 dev eth1" stdout=""
+03:36:28 INFO Executed command node=may-ngoai-internet command="ip route replace default via 198.51.100.1 dev eth1" stdout=""
+03:36:28 INFO Executed command node=may-ngoai-internet command="iperf3 -s -D" stdout=""
+03:36:28 INFO Executed command node=may-tinh-chi-nhanh command="ip link set eth1 up" stdout=""
+03:36:28 INFO Executed command node=may-tinh-chi-nhanh command="ip addr add 192.168.30.100/24 dev eth1" stdout=""
+03:36:28 INFO Executed command node=may-tinh-chi-nhanh command="ip route replace default via 192.168.30.1 dev eth1" stdout=""
+03:36:28 INFO Executed command node=may-tinh-chi-nhanh command="sh -c echo 'nameserver 192.168.20.53' > /etc/resolv.conf" stdout=""
+03:36:28 INFO Executed command node=may-tinh-tru-so command="ip link set eth1 up" stdout=""
+03:36:28 INFO Executed command node=may-tinh-tru-so command="ip addr add 192.168.10.100/24 dev eth1" stdout=""
+03:36:28 INFO Executed command node=may-tinh-tru-so command="ip route replace default via 192.168.10.1 dev eth1" stdout=""
+03:36:28 INFO Executed command node=may-tinh-tru-so command="sh -c echo 'nameserver 192.168.20.53' > /etc/resolv.conf" stdout=""
+03:36:28 INFO Executed command node=may-tinh-tru-so command="iperf3 -s -D" stdout=""
+03:36:29 INFO Adding host entries path=/etc/hosts
+03:36:29 INFO Adding SSH config for nodes path=/etc/ssh/ssh_config.d/clab-congty.conf
+03:36:29 INFO Apply summary
+╭─────────────┬──────────────────────────────────────────────────╮
+│    Action   │                      Details                     │
+├─────────────┼──────────────────────────────────────────────────┤
+│ added nodes │ may-chu-dns                                      │
+│ added nodes │ may-chu-web                                      │
+│ added nodes │ may-ngoai-internet                               │
+│ added nodes │ may-tinh-chi-nhanh                               │
+│ added nodes │ may-tinh-tru-so                                  │
+│ added nodes │ router-bien                                      │
+│ added nodes │ router-chi-nhanh                                 │
+│ added nodes │ router-nha-mang                                  │
+│ added nodes │ router-tru-so                                    │
+│ added links │ router-bien:eth1 -- router-tru-so:eth1           │
+│ added links │ router-chi-nhanh:eth1 -- router-tru-so:eth2      │
+│ added links │ router-bien:eth2 -- router-chi-nhanh:eth2        │
+│ added links │ router-bien:eth3 -- router-nha-mang:eth1         │
+│ added links │ may-tinh-tru-so:eth1 -- router-tru-so:eth3       │
+│ added links │ router-tru-so:eth4 -- switch-may-chu:sw-tru-so   │
+│ added links │ may-chu-web:eth1 -- switch-may-chu:sw-web        │
+│ added links │ may-chu-dns:eth1 -- switch-may-chu:sw-dns        │
+│ added links │ may-tinh-chi-nhanh:eth1 -- router-chi-nhanh:eth3 │
+│ added links │ may-ngoai-internet:eth1 -- router-nha-mang:eth2  │
+╰─────────────┴──────────────────────────────────────────────────╯
+03:36:29 INFO containerlab version
+  🎉=
+  │ A newer containerlab version (0.83.0) is available!
+  │ Release notes: https://containerlab.dev/rn/0.83/
+  │ Run 'clab version upgrade' or see https://containerlab.dev/install/ for other installation options.
+[1m╭[0m[1m────────────────────[0m[1m┬[0m[1m───────────────────────────────────────────[0m[1m┬[0m[1m────────────────────[0m[1m┬[0m[1m────────────────[0m[1m╮[0m
+[1m│[0m[1m        Name        [0m[1m│[0m[1m                 Kind/Image                [0m[1m│[0m[1m        State       [0m[1m│[0m[1m IPv4/6 Address [0m[1m│[0m
+[1m├[0m[1m────────────────────[0m[1m┼[0m[1m───────────────────────────────────────────[0m[1m┼[0m[1m────────────────────[0m[1m┼[0m[1m────────────────[0m[1m┤[0m
+│ may-chu-dns        │ linux                                     │ running            │ 172.20.20.32   │
+│                    │ congty/dns:1.0                            │ (health: starting) │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ may-chu-web        │ linux                                     │ running            │ 172.20.20.31   │
+│                    │ congty/web:1.0                            │ (health: starting) │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ may-ngoai-internet │ linux                                     │ running            │ 172.20.20.41   │
+│                    │ nicolaka/netshoot:v0.16                   │                    │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ may-tinh-chi-nhanh │ linux                                     │ running            │ 172.20.20.22   │
+│                    │ nicolaka/netshoot:v0.16                   │                    │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ may-tinh-tru-so    │ linux                                     │ running            │ 172.20.20.21   │
+│                    │ nicolaka/netshoot:v0.16                   │                    │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ router-bien        │ frr                                       │ running            │ 172.20.20.13   │
+│                    │ quay.io/frrouting/frr:containerlab-10.7.1 │                    │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ router-chi-nhanh   │ frr                                       │ running            │ 172.20.20.12   │
+│                    │ quay.io/frrouting/frr:containerlab-10.7.1 │                    │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ router-nha-mang    │ frr                                       │ running            │ 172.20.20.14   │
+│                    │ quay.io/frrouting/frr:containerlab-10.7.1 │                    │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ router-tru-so      │ frr                                       │ running            │ 172.20.20.11   │
+│                    │ quay.io/frrouting/frr:containerlab-10.7.1 │                    │ N/A            │
+╰────────────────────┴───────────────────────────────────────────┴────────────────────┴────────────────╯
+deploy_s=9
+Cho OSPF hoi tu...
+OSPF hoi tu sau ~16 s
+thoi_gian_deploy=16s
+
+$ containerlab inspect -t clab/so-do-mang-congty.clab.yml
+03:36:36 INFO Parsing & checking topology file=so-do-mang-congty.clab.yml
+[1m╭[0m[1m────────────────────[0m[1m┬[0m[1m───────────────────────────────────────────[0m[1m┬[0m[1m───────────[0m[1m┬[0m[1m────────────────[0m[1m╮[0m
+[1m│[0m[1m        Name        [0m[1m│[0m[1m                 Kind/Image                [0m[1m│[0m[1m   State   [0m[1m│[0m[1m IPv4/6 Address [0m[1m│[0m
+[1m├[0m[1m────────────────────[0m[1m┼[0m[1m───────────────────────────────────────────[0m[1m┼[0m[1m───────────[0m[1m┼[0m[1m────────────────[0m[1m┤[0m
+│ may-chu-dns        │ linux                                     │ running   │ 172.20.20.32   │
+│                    │ congty/dns:1.0                            │ (healthy) │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼───────────┼────────────────┤
+│ may-chu-web        │ linux                                     │ running   │ 172.20.20.31   │
+│                    │ congty/web:1.0                            │ (healthy) │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼───────────┼────────────────┤
+│ may-ngoai-internet │ linux                                     │ running   │ 172.20.20.41   │
+│                    │ nicolaka/netshoot:v0.16                   │           │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼───────────┼────────────────┤
+│ may-tinh-chi-nhanh │ linux                                     │ running   │ 172.20.20.22   │
+│                    │ nicolaka/netshoot:v0.16                   │           │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼───────────┼────────────────┤
+│ may-tinh-tru-so    │ linux                                     │ running   │ 172.20.20.21   │
+│                    │ nicolaka/netshoot:v0.16                   │           │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼───────────┼────────────────┤
+│ router-bien        │ frr                                       │ running   │ 172.20.20.13   │
+│                    │ quay.io/frrouting/frr:containerlab-10.7.1 │           │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼───────────┼────────────────┤
+│ router-chi-nhanh   │ frr                                       │ running   │ 172.20.20.12   │
+│                    │ quay.io/frrouting/frr:containerlab-10.7.1 │           │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼───────────┼────────────────┤
+│ router-nha-mang    │ frr                                       │ running   │ 172.20.20.14   │
+│                    │ quay.io/frrouting/frr:containerlab-10.7.1 │           │ N/A            │
+├────────────────────┼───────────────────────────────────────────┼───────────┼────────────────┤
+│ router-tru-so      │ frr                                       │ running   │ 172.20.20.11   │
+│                    │ quay.io/frrouting/frr:containerlab-10.7.1 │           │ N/A            │
+╰────────────────────┴───────────────────────────────────────────┴───────────┴────────────────╯
+
+$ bash -c bridge link | grep switch-may-chu
+67: sw-tru-so@if68: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9500 master switch-may-chu state forwarding priority 32 cost 2 
+69: sw-web@if70: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9500 master switch-may-chu state forwarding priority 32 cost 2 
+71: sw-dns@if72: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9500 master switch-may-chu state forwarding priority 32 cost 2 
+so_container=9  so_cong_br_srv=3  deploy_exit=0
+=> TC12: PASS

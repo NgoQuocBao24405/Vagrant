@@ -1,0 +1,104 @@
+# Lab "congty" – mô phỏng mạng công ty (HQ, Branch, ISP). containerlab 0.82.0
+# Chạy trong VM:  cd /vagrant && ./scripts/dung-lab.sh
+# Sơ đồ IP: docs/bang-dia-chi-ip.md
+name: congty
+# prefix "": tên container = tên node (vd router-tru-so), không có tiền tố clab-congty-
+prefix: ""
+
+mgmt:
+  network: clab
+  ipv4-subnet: 172.20.20.0/24
+
+topology:
+  groups:
+    routers:
+      kind: frr
+      image: quay.io/frrouting/frr:containerlab-10.7.1
+      # configs/ là nguồn sự thật: mỗi lần deploy đều nạp lại file trong configs/.
+      # Sửa trên router bằng vtysh thì PHẢI chạy ./scripts/luu-cau-hinh.sh để chép về configs/.
+      enforce-startup-config: true
+    hosts:
+      kind: linux
+      image: nicolaka/netshoot:v0.16
+
+  nodes:
+    router-tru-so:
+      group: routers
+      mgmt-ipv4: 172.20.20.11
+      startup-config: ../configs/router-tru-so/frr.conf
+      daemons: [ospfd]
+    router-chi-nhanh:
+      group: routers
+      mgmt-ipv4: 172.20.20.12
+      startup-config: ../configs/router-chi-nhanh/frr.conf
+      daemons: [ospfd]
+    router-bien:
+      group: routers
+      mgmt-ipv4: 172.20.20.13
+      startup-config: ../configs/router-bien/frr.conf
+      daemons: [ospfd, bgpd]
+    router-nha-mang:
+      group: routers
+      mgmt-ipv4: 172.20.20.14
+      startup-config: ../configs/router-nha-mang/frr.conf
+      daemons: [bgpd]
+
+    switch-may-chu:
+      kind: bridge            # Linux bridge trên VM, dung-lab.sh tạo trước
+
+    may-tinh-tru-so:
+      group: hosts
+      mgmt-ipv4: 172.20.20.21
+      exec:
+        - ip link set eth1 up
+        - ip addr add 192.168.10.100/24 dev eth1
+        - ip route replace default via 192.168.10.1 dev eth1
+        - sh -c "echo 'nameserver 192.168.20.53' > /etc/resolv.conf"
+        - iperf3 -s -D
+    may-tinh-chi-nhanh:
+      group: hosts
+      mgmt-ipv4: 172.20.20.22
+      exec:
+        - ip link set eth1 up
+        - ip addr add 192.168.30.100/24 dev eth1
+        - ip route replace default via 192.168.30.1 dev eth1
+        - sh -c "echo 'nameserver 192.168.20.53' > /etc/resolv.conf"
+    may-ngoai-internet:
+      group: hosts
+      mgmt-ipv4: 172.20.20.41
+      exec:
+        - ip link set eth1 up
+        - ip addr add 198.51.100.10/24 dev eth1
+        - ip route replace default via 198.51.100.1 dev eth1
+        - iperf3 -s -D
+    may-chu-web:
+      kind: linux
+      image: congty/web:1.0
+      mgmt-ipv4: 172.20.20.31
+      exec:
+        - ip link set eth1 up
+        - ip addr add 192.168.20.10/24 dev eth1
+        - ip route replace default via 192.168.20.1 dev eth1
+    may-chu-dns:
+      kind: linux
+      image: congty/dns:1.0
+      mgmt-ipv4: 172.20.20.32
+      binds:
+        - ../configs/may-chu-dns/named.conf:/etc/bind/named.conf:ro
+        - ../configs/may-chu-dns/db.congty.lab:/etc/bind/db.congty.lab:ro
+      exec:
+        - ip link set eth1 up
+        - ip addr add 192.168.20.53/24 dev eth1
+        - ip route replace default via 192.168.20.1 dev eth1
+
+  links:
+    - endpoints: ["router-tru-so:eth1", "router-bien:eth1"]             # day-tru-so-bien 10.0.0.0/30   area 0
+    - endpoints: ["router-tru-so:eth2", "router-chi-nhanh:eth1"]        # day-tru-so-chi-nhanh 10.0.0.4/30   area 1
+    - endpoints: ["router-chi-nhanh:eth2", "router-bien:eth2"]          # day-bien-chi-nhanh 10.0.0.8/30   area 1
+    - endpoints: ["router-bien:eth3", "router-nha-mang:eth1"]           # day-bien-nha-mang 203.0.113.0/30 eBGP
+    - endpoints: ["router-tru-so:eth3", "may-tinh-tru-so:eth1"]         # day-lan-tru-so 192.168.10.0/24
+    - endpoints: ["router-tru-so:eth4", "switch-may-chu:sw-tru-so"]     # day-tru-so-switch 192.168.20.0/24
+    - endpoints: ["may-chu-web:eth1", "switch-may-chu:sw-web"]          # day-web-switch
+    - endpoints: ["may-chu-dns:eth1", "switch-may-chu:sw-dns"]          # day-dns-switch
+    - endpoints: ["router-chi-nhanh:eth3", "may-tinh-chi-nhanh:eth1"]   # day-lan-chi-nhanh 192.168.30.0/24
+    - endpoints: ["router-nha-mang:eth2", "may-ngoai-internet:eth1"]    # day-nha-mang-internet 198.51.100.0/24

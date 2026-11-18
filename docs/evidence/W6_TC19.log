@@ -1,0 +1,186 @@
+# TC19 – sửa trên router, save.sh, destroy, deploy lại vẫn còn thay đổi (2026-11-16T16:46:26+00:00)
+
+$ docker exec clab-congty-r-hq vtysh -c conf t -c interface eth3 -c description TEST-TC19 -c end -c write memory
+% Configuration applied with notes:
+No changes found to be committed!
+% Configuration applied with notes:
+No changes found to be committed!
+Note: this version of vtysh never writes vtysh.conf
+Building Configuration...
+Integrated configuration saved to /etc/frr/frr.conf
+[OK]
+
+$ ./scripts/save.sh
+Da luu configs/r-hq/frr.conf
+Da luu configs/r-br/frr.conf
+Da luu configs/r-edge/frr.conf
+Da luu configs/r-isp/frr.conf
+
+ M configs/r-edge/frr.conf
+ M configs/r-isp/frr.conf
+RM configs/srv-dns/db.abc.lab -> configs/srv-dns/db.congty.lab
+ M configs/srv-dns/named.conf
+Nho commit thay doi (tren Windows: GitHub Desktop hoac VS Code).
+
+$ git --no-pager diff --stat configs/
+ configs/r-edge/frr.conf       | 8 ++++----
+ configs/r-isp/frr.conf        | 4 ++--
+ configs/srv-dns/db.congty.lab | 6 +++---
+ configs/srv-dns/named.conf    | 4 ++--
+ 4 files changed, 11 insertions(+), 11 deletions(-)
+
+$ git --no-pager diff configs/r-hq/frr.conf
+
+$ ./scripts/destroy.sh
+16:46:28 INFO Parsing & checking topology file=so-do-mang-congty.clab.yml
+16:46:28 INFO Parsing & checking topology file=so-do-mang-congty.clab.yml
+16:46:28 INFO Destroying lab name=congty
+16:46:29 INFO Removed container name=clab-congty-srv-dns
+16:46:29 INFO Removed container name=clab-congty-inet-host
+16:46:30 INFO Removed container name=clab-congty-r-isp
+16:46:30 INFO Removed container name=clab-congty-r-hq
+16:46:30 INFO Removed container name=clab-congty-srv-web
+16:46:30 INFO Removed container name=clab-congty-pc-br1
+16:46:30 INFO Removed container name=clab-congty-r-edge
+16:46:30 INFO Removed container name=clab-congty-pc-hq1
+16:46:30 INFO Removed container name=clab-congty-r-br
+16:46:30 INFO Removing host entries path=/etc/hosts
+16:46:30 INFO Removing SSH config path=/etc/ssh/ssh_config.d/clab-congty.conf
+
+$ ./scripts/deploy.sh
+16:46:30 INFO Containerlab started version=0.82.0
+16:46:30 INFO Parsing & checking topology file=so-do-mang-congty.clab.yml
+16:46:30 INFO Applying link change without node lifecycle action node=br-srv change="added link"
+16:46:30 INFO Applying link change without node lifecycle action node=br-srv change="added link"
+16:46:30 INFO Applying link change without node lifecycle action node=br-srv change="added link"
+16:46:30 INFO Creating docker network name=clab IPv4 subnet=172.20.20.0/24 IPv6 subnet="" MTU=0
+16:46:30 INFO Creating lab directory path=/home/vagrant/clab-runtime/clab-congty
+16:46:32 INFO Creating node node=inet-host
+16:46:32 INFO Creating container name=inet-host
+16:46:32 INFO Creating node node=r-edge
+16:46:32 INFO Creating node node=pc-hq1
+16:46:32 INFO Creating container name=pc-hq1
+16:46:32 INFO Creating node node=pc-br1
+16:46:32 INFO Creating container name=pc-br1
+16:46:32 INFO Creating container name=r-edge
+16:46:33 INFO Creating node node=r-isp
+16:46:33 INFO Creating container name=r-isp
+16:46:33 INFO Creating node node=r-hq
+16:46:33 INFO Creating container name=r-hq
+16:46:34 INFO Creating node node=r-br
+16:46:34 INFO Creating node node=srv-dns
+16:46:34 INFO Creating container name=srv-dns
+16:46:34 INFO Creating container name=r-br
+16:46:36 INFO Creating node node=srv-web
+16:46:36 INFO Creating container name=srv-web
+16:46:38 INFO Creating link link="r-edge:eth1 -- r-hq:eth1"
+16:46:38 INFO Created link: r-hq:eth1 ▪┄┄▪ r-edge:eth1
+16:46:38 INFO Creating link link="r-br:eth1 -- r-hq:eth2"
+16:46:38 INFO Created link: r-hq:eth2 ▪┄┄▪ r-br:eth1
+16:46:38 INFO Creating link link="r-br:eth2 -- r-edge:eth2"
+16:46:38 INFO Created link: r-br:eth2 ▪┄┄▪ r-edge:eth2
+16:46:38 INFO Creating link link="r-edge:eth3 -- r-isp:eth1"
+16:46:38 INFO Created link: r-edge:eth3 ▪┄┄▪ r-isp:eth1
+16:46:38 INFO Creating link link="pc-hq1:eth1 -- r-hq:eth3"
+16:46:38 INFO Created link: r-hq:eth3 ▪┄┄▪ pc-hq1:eth1
+16:46:38 INFO Creating link link="br-srv:p1-rhq -- r-hq:eth4"
+16:46:38 INFO Created link: r-hq:eth4 ▪┄┄▪ br-srv:p1-rhq
+16:46:38 INFO Creating link link="br-srv:p2-web -- srv-web:eth1"
+16:46:38 INFO Created link: srv-web:eth1 ▪┄┄▪ br-srv:p2-web
+16:46:38 INFO Creating link link="br-srv:p3-dns -- srv-dns:eth1"
+16:46:38 INFO Created link: srv-dns:eth1 ▪┄┄▪ br-srv:p3-dns
+16:46:38 INFO Creating link link="pc-br1:eth1 -- r-br:eth3"
+16:46:39 INFO Created link: r-br:eth3 ▪┄┄▪ pc-br1:eth1
+16:46:39 INFO Creating link link="inet-host:eth1 -- r-isp:eth2"
+16:46:39 INFO Created link: r-isp:eth2 ▪┄┄▪ inet-host:eth1
+16:46:41 INFO Executed command node=inet-host command="ip link set eth1 up" stdout=""
+16:46:41 INFO Executed command node=inet-host command="ip addr add 198.51.100.10/24 dev eth1" stdout=""
+16:46:41 INFO Executed command node=inet-host command="ip route replace default via 198.51.100.1 dev eth1" stdout=""
+16:46:41 INFO Executed command node=inet-host command="iperf3 -s -D" stdout=""
+16:46:41 INFO Executed command node=pc-br1 command="ip link set eth1 up" stdout=""
+16:46:41 INFO Executed command node=pc-br1 command="ip addr add 192.168.30.100/24 dev eth1" stdout=""
+16:46:41 INFO Executed command node=pc-br1 command="ip route replace default via 192.168.30.1 dev eth1" stdout=""
+16:46:41 INFO Executed command node=pc-br1 command="sh -c echo 'nameserver 192.168.20.53' > /etc/resolv.conf" stdout=""
+16:46:41 INFO Executed command node=pc-hq1 command="ip link set eth1 up" stdout=""
+16:46:41 INFO Executed command node=pc-hq1 command="ip addr add 192.168.10.100/24 dev eth1" stdout=""
+16:46:41 INFO Executed command node=pc-hq1 command="ip route replace default via 192.168.10.1 dev eth1" stdout=""
+16:46:41 INFO Executed command node=pc-hq1 command="sh -c echo 'nameserver 192.168.20.53' > /etc/resolv.conf" stdout=""
+16:46:41 INFO Executed command node=pc-hq1 command="iperf3 -s -D" stdout=""
+16:46:41 INFO Executed command node=srv-dns command="ip link set eth1 up" stdout=""
+16:46:41 INFO Executed command node=srv-dns command="ip addr add 192.168.20.53/24 dev eth1" stdout=""
+16:46:41 INFO Executed command node=srv-dns command="ip route replace default via 192.168.20.1 dev eth1" stdout=""
+16:46:41 INFO Executed command node=srv-web command="ip link set eth1 up" stdout=""
+16:46:41 INFO Executed command node=srv-web command="ip addr add 192.168.20.10/24 dev eth1" stdout=""
+16:46:41 INFO Executed command node=srv-web command="ip route replace default via 192.168.20.1 dev eth1" stdout=""
+16:46:42 INFO Adding host entries path=/etc/hosts
+16:46:42 INFO Adding SSH config for nodes path=/etc/ssh/ssh_config.d/clab-congty.conf
+16:46:42 INFO Apply summary
+╭─────────────┬───────────────────────────────╮
+│    Action   │            Details            │
+├─────────────┼───────────────────────────────┤
+│ added nodes │ inet-host                     │
+│ added nodes │ pc-br1                        │
+│ added nodes │ pc-hq1                        │
+│ added nodes │ r-br                          │
+│ added nodes │ r-edge                        │
+│ added nodes │ r-hq                          │
+│ added nodes │ r-isp                         │
+│ added nodes │ srv-dns                       │
+│ added nodes │ srv-web                       │
+│ added links │ r-edge:eth1 -- r-hq:eth1      │
+│ added links │ r-br:eth1 -- r-hq:eth2        │
+│ added links │ r-br:eth2 -- r-edge:eth2      │
+│ added links │ r-edge:eth3 -- r-isp:eth1     │
+│ added links │ pc-hq1:eth1 -- r-hq:eth3      │
+│ added links │ br-srv:p1-rhq -- r-hq:eth4    │
+│ added links │ br-srv:p2-web -- srv-web:eth1 │
+│ added links │ br-srv:p3-dns -- srv-dns:eth1 │
+│ added links │ pc-br1:eth1 -- r-br:eth3      │
+│ added links │ inet-host:eth1 -- r-isp:eth2  │
+╰─────────────┴───────────────────────────────╯
+16:46:42 INFO containerlab version
+  🎉=
+  │ A newer containerlab version (0.83.0) is available!
+  │ Release notes: https://containerlab.dev/rn/0.83/
+  │ Run 'clab version upgrade' or see https://containerlab.dev/install/ for other installation options.
+[1m╭[0m[1m───────────────────────[0m[1m┬[0m[1m───────────────────────────────────────────[0m[1m┬[0m[1m────────────────────[0m[1m┬[0m[1m────────────────[0m[1m╮[0m
+[1m│[0m[1m          Name         [0m[1m│[0m[1m                 Kind/Image                [0m[1m│[0m[1m        State       [0m[1m│[0m[1m IPv4/6 Address [0m[1m│[0m
+[1m├[0m[1m───────────────────────[0m[1m┼[0m[1m───────────────────────────────────────────[0m[1m┼[0m[1m────────────────────[0m[1m┼[0m[1m────────────────[0m[1m┤[0m
+│ clab-congty-inet-host │ linux                                     │ running            │ 172.20.20.41   │
+│                       │ nicolaka/netshoot:v0.16                   │                    │ N/A            │
+├───────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ clab-congty-pc-br1    │ linux                                     │ running            │ 172.20.20.22   │
+│                       │ nicolaka/netshoot:v0.16                   │                    │ N/A            │
+├───────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ clab-congty-pc-hq1    │ linux                                     │ running            │ 172.20.20.21   │
+│                       │ nicolaka/netshoot:v0.16                   │                    │ N/A            │
+├───────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ clab-congty-r-br      │ frr                                       │ running            │ 172.20.20.12   │
+│                       │ quay.io/frrouting/frr:containerlab-10.7.1 │                    │ N/A            │
+├───────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ clab-congty-r-edge    │ frr                                       │ running            │ 172.20.20.13   │
+│                       │ quay.io/frrouting/frr:containerlab-10.7.1 │                    │ N/A            │
+├───────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ clab-congty-r-hq      │ frr                                       │ running            │ 172.20.20.11   │
+│                       │ quay.io/frrouting/frr:containerlab-10.7.1 │                    │ N/A            │
+├───────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ clab-congty-r-isp     │ frr                                       │ running            │ 172.20.20.14   │
+│                       │ quay.io/frrouting/frr:containerlab-10.7.1 │                    │ N/A            │
+├───────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ clab-congty-srv-dns   │ linux                                     │ running            │ 172.20.20.32   │
+│                       │ congty/dns:1.0                            │ (health: starting) │ N/A            │
+├───────────────────────┼───────────────────────────────────────────┼────────────────────┼────────────────┤
+│ clab-congty-srv-web   │ linux                                     │ running            │ 172.20.20.31   │
+│                       │ congty/web:1.0                            │ (health: starting) │ N/A            │
+╰───────────────────────┴───────────────────────────────────────────┴────────────────────┴────────────────╯
+deploy_s=12
+Cho OSPF hoi tu...
+OSPF hoi tu sau ~19 s
+
+$ bash -c docker exec clab-congty-r-hq vtysh -c 'show running-config' | grep -B1 -A3 TEST-TC19
+interface eth3
+ description TEST-TC19
+ ip address 192.168.10.1/24
+ ip ospf passive
+exit
+=> TC19: PASS

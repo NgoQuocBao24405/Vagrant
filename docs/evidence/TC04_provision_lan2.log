@@ -1,0 +1,28 @@
+﻿==> default: Running provisioner: setup (shell)...
+    default: Running: C:/Users/ngoqu/AppData/Local/Temp/vagrant-shell20261108-21560-we5o3.sh
+    default: 
+    default: ==> Docker da co: Docker version 29.9.2, build a82e528
+    default: Synchronizing state of docker.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+    default: Executing: /usr/lib/systemd/systemd-sysv-install enable docker
+    default: 
+    default: ==> containerlab 0.82.0 da co
+    default: 
+    default: ==> Cai cong cu phu
+    default: 
+    default: ==> Keo image router va host
+    default: 
+    default: ==> Build image dich vu
+    default: 
+    default: ==> KET QUA
+    default: Docker Engine: 29.9.2
+    default: Docker Compose version v5.6.1
+    default:     version: 0.82.0
+    default: docker-ce docker-ce-cli docker-compose-plugin
+    default: abc/dns:1.0  38.9MB
+    default: abc/web:1.0  95.9MB
+    default: quay.io/frrouting/frr:containerlab-10.7.1  306MB
+    default: nicolaka/netshoot:v0.16  898MB
+    default: Xong. Thoat roi 'vagrant ssh' lai de nhan nhom docker va clab_admins.
+==> default: Running provisioner: br-srv (shell)...
+    default: Running: inline script
+provision_lan2_s=21.113581

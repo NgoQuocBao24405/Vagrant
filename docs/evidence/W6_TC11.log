@@ -1,0 +1,16 @@
+# TC11 – topology cố ý chứa khóa extras phải bị từ chối (2026-11-16T16:45:55+00:00)
+
+$ grep -n -A2 ^    r-hq: /tmp/congty-legacy.clab.yml
+23:    r-hq:
+24-      extras: {}
+25-      group: routers
+
+$ containerlab validate -t /tmp/congty-legacy.clab.yml
+          
+   ERROR  
+          
+  Failed to read topology file: the "extras" node field is removed; set its kind-specific config keys directly on the 
+  node definition instead - see https://containerlab.dev/manual/nodes/#kind-specific-config                           
+  Consult with release notes to see if any fields were changed/removed.                                               
+
+=> TC11: PASS
